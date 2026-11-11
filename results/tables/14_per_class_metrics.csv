@@ -1,0 +1,9 @@
+split,best_model,class,meaning,precision,recall,f1,support
+random,rbfsvm,N,Normal,0.997,0.981,0.989,22522
+random,rbfsvm,S,Supraventricular,0.814,0.922,0.865,695
+random,rbfsvm,V,Ventricular,0.958,0.976,0.967,1752
+random,rbfsvm,F,Fusion,0.423,0.9,0.576,201
+inter-patient,rf,N,Normal,0.961,0.911,0.935,44240
+inter-patient,rf,S,Supraventricular,0.166,0.207,0.185,1837
+inter-patient,rf,V,Ventricular,0.816,0.971,0.887,3220
+inter-patient,rf,F,Fusion,0.069,0.296,0.112,388

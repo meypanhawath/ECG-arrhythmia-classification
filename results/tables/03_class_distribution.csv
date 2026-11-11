@@ -1,0 +1,5 @@
+class,meaning,beats,share_pct,ratio_to_N
+N,Normal,90125,89.48,1
+S,Supraventricular,2781,2.76,32
+V,Ventricular,7009,6.96,13
+F,Fusion,803,0.8,112

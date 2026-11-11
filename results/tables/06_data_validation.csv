@@ -1,0 +1,8 @@
+check,value,status
+Beats extracted,"100,679",ok
+Records,44,ok
+Features designed,61,ok
+Missing or infinite values,0,ok
+Constant features,0,ok
+Classes present,"F, N, S, V",ok
+Patients in both DS1 and DS2,0,ok

@@ -1,0 +1,5 @@
+family,total_importance,n_features,mean_importance,importance_per_feature_rank
+rr,0.40137,8,0.05017,1
+morph,0.30416,32,0.0095,4
+wavelet,0.18352,13,0.01412,3
+stats,0.11095,6,0.01849,2

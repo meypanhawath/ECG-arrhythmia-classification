@@ -1,0 +1,6 @@
+family,n,features,purpose
+Timing (RR),8,"pre_rr, post_rr, local_rr, global_rr + 4 ratios",is this beat early or late relative to the patient's own rhythm
+Beat shape,32,morph0 .. morph31,the 700 ms curve resampled to 32 points
+Wavelet,15,"w0..w4 energy, std, mean (db4, level 4)",energy at five frequency scales; wide beats shift energy to coarse bands
+Statistics,6,"skew, kurt, energy, rpeak_amp, min_amp, qrs_width","sharpness, asymmetry and a direct width measurement"
+TOTAL,61,,

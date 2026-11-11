@@ -1,0 +1,5 @@
+class,split,beats,records,top_record,top_beats,top_share_pct,top3_share_pct
+S,DS1,944,16,209,383,40.6,65.5
+S,DS2,1837,16,232,1382,75.2,89.6
+F,DS1,414,10,208,372,89.9,95.9
+F,DS2,388,7,213,362,93.3,98.7

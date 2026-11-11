@@ -1,0 +1,5 @@
+step,method,removes
+Baseline removal,median filter 200 ms then 600 ms,respiration drift
+Bandpass,"Butterworth order 3, 0.5-40 Hz, zero phase","power-line hum, muscle noise"
+Segmentation,"90 samples before R, 162 after (252 total, 700 ms)",inter-beat gaps
+Normalisation,"per beat, zero mean unit variance",amplitude differences between recordings

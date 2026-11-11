@@ -1,0 +1,16 @@
+feature,f_statistic,family
+rpeak_amp,11257.25,stats
+post_over_pre,11210.38,rr
+pre_over_local,10060.98,rr
+morph11,7303.28,morph
+w2_std,6251.06,wavelet
+skew,5740.21,stats
+kurt,5357.44,stats
+w3_std,4440.11,wavelet
+w1_std,4014.33,wavelet
+morph9,3642.69,morph
+w2_energy,3388.75,wavelet
+morph8,3228.52,morph
+w0_energy,3167.3,wavelet
+w1_mean,2215.48,wavelet
+w3_energy,2191.28,wavelet

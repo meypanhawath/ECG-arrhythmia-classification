@@ -1,0 +1,5 @@
+model,name,boundary,role
+logreg,Logistic regression,one straight boundary,baseline every other model must beat
+linsvm,Linear SVM,"straight, widest margin",tests whether better placement helps
+rbfsvm,RBF SVM,curved,tests whether curvature helps
+rf,Random forest,staircase of thresholds,"ensemble, and reports feature importance"

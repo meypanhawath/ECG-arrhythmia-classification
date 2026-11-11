@@ -1,0 +1,4 @@
+question,answer,f1_macro,f1_S
+Best combination,rr+wavelet+stats,0.5209,0.1794
+Using every feature,ALL,0.4908,0.0702
+Cost of adding the rest,-0.0301 macro F1,,-0.1092

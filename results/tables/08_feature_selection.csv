@@ -1,0 +1,7 @@
+family,kept
+rr,8
+morph,32
+wavelet,13
+stats,6
+TOTAL kept,59
+dropped (corr > 0.97),2

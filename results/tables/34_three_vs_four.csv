@@ -1,0 +1,4 @@
+task,classes,macro_f1
+4 classes (N/S/V/F),4,0.5298
+3 classes (N/S/V),3,0.6511
+difference,-1,0.1213

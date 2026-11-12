@@ -1,0 +1,15 @@
+n,finding,evidence,table,figure
+1,Best model under the honest protocol,"rf: accuracy 0.8837, macro F1 0.5298, kappa 0.5197",13_model_metrics,07_model_comparison
+2,Accuracy hides the failure; macro F1 does not,"accuracy falls +7.1 pts between protocols, macro F1 falls +24.4 pts",13_model_metrics,07_model_comparison
+3,Weighted F1 is accuracy wearing a different name,"weighted F1 0.8980 vs accuracy 0.8837, difference 0.0143",13_model_metrics,07_model_comparison
+4,Sharing patients between train and test inflates the rare classes,"F1(S) 0.865 -> 0.185, F1(F) 0.576 -> 0.112",14_per_class_metrics,08_per_class_f1
+5,Class imbalance is not the bottleneck,five balancing strategies move F1(S) by only 0.1071,22_imbalance_experiment,16_imbalance_experiment
+6,Only the timing features detect class S,"RR alone F1(S) 0.0906, best of the other three families 0.0084",19_family_ablation,14_family_ablation
+7,Adding every feature is worse than choosing a subset,rr+wavelet+stats macro F1 0.5209 vs ALL 0.4908,20_feature_combinations,15_feature_combinations
+8,More beats do not help; more patients would,20x more training beats buys +0.0233 macro F1,24_learning_curve,17_learning_curve
+9,"Depth causes the overfitting, not tree count",gap 0.249 at depth 4 vs 0.509 unlimited; 0.508 to 0.536 across 10-400 trees,26_depth_curve,18_validation_curves
+10,The result is one patient away from looking different,excluding record 232 changes F1(S) by +0.1712,31_single_patient_effect,20_per_record_analysis
+11,Choosing hyperparameters on the test set adds optimism,+0.0045 macro F1 from letting DS2 pick the depth,33_selection_bias,21_honest_selection
+12,Fold-to-fold variation is larger than any tuning gain,grouped 5-fold macro F1 0.4882 +/- 0.0629,28_cross_validation,19_cross_validation
+13,The pipeline has no leakage of its own,shuffled labels score 0.2355 against the always-N baseline 0.2355,36_pipeline_validation,23_pipeline_validation
+14,Dropping class F does not rescue the task,3-class macro F1 0.6511 vs 4-class 0.5298,35_three_vs_four,22_three_class

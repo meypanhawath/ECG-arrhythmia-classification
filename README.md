@@ -104,7 +104,7 @@ balancing strategies say otherwise: F1 on class S moves by only
 SMOTE interpolates between existing minority beats, and those beats come from a handful of
 patients. Synthetic beats inherit that handful. The training set gets larger, not more varied.
 
-![imbalance](results/figures/13_imbalance_experiment.png)
+![imbalance](results/figures/16_imbalance_experiment.png)
 
 ### The failure is a patient problem
 
@@ -121,7 +121,7 @@ in the test set, at recall 0.008. Remove that one patient and
 F1 on class S moves +0.1712. A result that one patient can swing that far
 is a result about patients, not about arrhythmias.
 
-![per record](results/figures/17_per_record_analysis.png)
+![per record](results/figures/20_per_record_analysis.png)
 
 ### Only timing features see class S
 
@@ -151,7 +151,7 @@ On class S, RR alone scores 0.0906 and every feature together scores
 | morph+wavelet | 45 | 0.4252 | 0.0022 |
 | morph | 32 | 0.4126 | 0.0033 |
 
-![feature combinations](results/figures/12_feature_combinations.png)
+![feature combinations](results/figures/15_feature_combinations.png)
 
 ### The data ceiling is patients, not beats
 
@@ -168,7 +168,7 @@ On class S, RR alone scores 0.0906 and every feature together scores
 macro F1. The curve is flat because the extra beats come from the same
 22 patients.
 
-![learning curve](results/figures/14_learning_curve.png)
+![learning curve](results/figures/17_learning_curve.png)
 
 ### Honest uncertainty
 
@@ -185,7 +185,7 @@ models, which puts most of the model-selection work in this project inside the n
 | Tree count (10 to 400) | 0.0326 |
 | Class balancing (5 strategies) | 0.0296 |
 
-![what moves the result](results/figures/21_what_moves_the_result.png)
+![what moves the result](results/figures/24_what_moves_the_result.png)
 
 ## Repository layout
 
@@ -198,8 +198,8 @@ ecg-arrhythmia-classification/
     pipeline.py               the same pipeline as a plain module
   results/
     REPORT.md                 every table and figure, in order
-    tables/                   38 CSV files, one per result
-    figures/                  21 PNG files
+    tables/                   63 CSV files, one per result
+    figures/                  36 PNG files
 ```
 
 ## Reproducing
@@ -208,6 +208,33 @@ Open `notebook/ECG_arrhythmia_classification.ipynb` in Google Colab, CPU runtime
 Feature extraction takes around 20 minutes the first time and is cached to Drive as Parquet,
 so later runs start at the modelling cells. `REBUILD_FEATURES = True` forces re-extraction.
 Random seed 42 throughout.
+
+## Medical terms
+
+| Term | Meaning | អត្ថន័យ |
+|---|---|---|
+| **Arrhythmia** | any heartbeat that is irregular in rhythm or origin | ចង្វាក់បេះដូងលោតមិនទៀងទាត់ ឬចេញពីទីតាំងមិនធម្មតា |
+| **ECG (EKG)** | a recording of the heart's electrical activity, measured from the skin | ការកត់ត្រាសកម្មភាពអគ្គិសនីរបស់បេះដូង វាស់ពីលើស្បែក |
+| **Lead** | one viewing angle of that electrical activity, from a pair of electrodes | មុំមើលមួយនៃសកម្មភាពអគ្គិសនីនោះ បានមកពីអេឡិចត្រូតមួយគូ |
+| **MLII** | modified limb lead II, the usual viewing angle on a portable monitor | មុំមើលធម្មតាលើម៉ាស៊ីនតាមដានចល័ត |
+| **Holter monitor** | a portable ECG worn for hours or days during normal activity | ម៉ាស៊ីន ECG ចល័ត ពាក់រាប់ម៉ោង ឬរាប់ថ្ងៃ ពេលធ្វើសកម្មភាពធម្មតា |
+| **Atria / ventricles** | the two upper / two lower chambers of the heart | បន្ទប់បេះដូងខាងលើពីរ / បន្ទប់បេះដូងខាងក្រោមពីរ |
+| **Sinus rhythm** | the normal rhythm, set by the heart's own pacemaker in the right atrium | ចង្វាក់ធម្មតា កំណត់ដោយអ្នកកំណត់ចង្វាក់ធម្មជាតិនៅបន្ទប់ខាងលើស្តាំ |
+| **P wave** | the small bump before the spike: the atria contracting | រលកតូចមុនកំពូលស្រួច៖ បន្ទប់ខាងលើកំពុងរួញ |
+| **QRS complex** | the tall sharp spike: the ventricles contracting | កំពូលស្រួចខ្ពស់៖ បន្ទប់ខាងក្រោមកំពុងរួញ |
+| **R peak** | the highest point of the QRS, used as the timestamp of the beat | ចំណុចខ្ពស់បំផុតនៃ QRS ប្រើជាពេលវេលាកំណត់នៃចង្វាក់នីមួយៗ |
+| **T wave** | the broad bump after the spike: the ventricles recovering | រលកធំមូលបន្ទាប់ពីកំពូលស្រួច៖ បន្ទប់ខាងក្រោមកំពុងស្តារឡើងវិញ |
+| **RR interval** | the time from one R peak to the next, i.e. the gap between beats | ពេលវេលាពី R peak មួយទៅ R peak បន្ទាប់ គឺចន្លោះរវាងចង្វាក់ពីរ |
+| **Ectopic beat** | a beat that starts somewhere other than the normal pacemaker | ចង្វាក់ដែលចេញពីទីតាំងផ្សេង មិនមែនពីអ្នកកំណត់ចង្វាក់ធម្មតា |
+| **Premature beat** | a beat that arrives earlier than the rhythm would predict | ចង្វាក់ដែលមកដល់មុនពេលកំណត់ |
+| **Supraventricular** | originating above the ventricles, in the atria or the junction | ចេញពីខាងលើបន្ទប់ក្រោម គឺនៅបន្ទប់ខាងលើ ឬចំណុចតភ្ជាប់ |
+| **Ventricular** | originating in the ventricles themselves | ចេញពីបន្ទប់បេះដូងខាងក្រោមផ្ទាល់ |
+| **Fusion beat** | a normal and a ventricular beat firing at once, blending into one shape | ចង្វាក់ធម្មតា និងចង្វាក់ពីបន្ទប់ក្រោម លោតព្រមគ្នា ទៅជារូបរាងតែមួយ |
+| **Escape beat** | a backup beat produced when the normal pacemaker misses | ចង្វាក់បម្រុង កើតឡើងពេលអ្នកកំណត់ចង្វាក់ធម្មតាខកខាន |
+| **Bundle branch block** | delayed conduction down one side; the beat is wide but normal in origin | ការបញ្ជូនសញ្ញាយឺតនៅម្ខាង ធ្វើឲ្យចង្វាក់ធាត់ ប៉ុន្តែប្រភពនៅតែធម្មតា |
+| **Paced beat** | a beat triggered by an implanted pacemaker, not by the heart itself | ចង្វាក់បង្កើតដោយម៉ាស៊ីនជំនួយចង្វាក់ដែលដាក់ក្នុងខ្លួន មិនមែនដោយបេះដូងផ្ទាល់ |
+| **Baseline wander** | slow drift of the whole trace, caused by breathing and movement | ការរសាត់យឺតៗនៃខ្សែក្រាបទាំងមូល បណ្តាលមកពីការដកដង្ហើម និងចលនា |
+| **AAMI EC57** | the standard that groups the raw beat labels into the N/S/V/F/Q classes | ស្តង់ដារដែលដាក់ស្លាកចង្វាក់ដើមជាក្រុម N/S/V/F/Q |
 
 ## Limitations
 

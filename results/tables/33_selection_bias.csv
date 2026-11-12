@@ -1,0 +1,4 @@
+procedure,max_depth,reported_f1
+"Chosen on DS1 inner CV, reported on DS2",4,0.5374
+Chosen by reading DS2 (what not to do),6,0.5419
+Optimism from letting the test set choose,,0.0045

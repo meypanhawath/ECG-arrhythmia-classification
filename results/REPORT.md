@@ -3,6 +3,35 @@
 Companion to the README. Every table in this report is also saved as a CSV in
 `results/tables/`, and every figure as a PNG in `results/figures/`.
 
+## Medical terms
+
+The notebook uses clinical vocabulary throughout. Short definitions:
+
+| Term | Meaning | អត្ថន័យ |
+|---|---|---|
+| **Arrhythmia** | any heartbeat that is irregular in rhythm or origin | ចង្វាក់បេះដូងលោតមិនទៀងទាត់ ឬចេញពីទីតាំងមិនធម្មតា |
+| **ECG (EKG)** | a recording of the heart's electrical activity, measured from the skin | ការកត់ត្រាសកម្មភាពអគ្គិសនីរបស់បេះដូង វាស់ពីលើស្បែក |
+| **Lead** | one viewing angle of that electrical activity, from a pair of electrodes | មុំមើលមួយនៃសកម្មភាពអគ្គិសនីនោះ បានមកពីអេឡិចត្រូតមួយគូ |
+| **MLII** | modified limb lead II, the usual viewing angle on a portable monitor | មុំមើលធម្មតាលើម៉ាស៊ីនតាមដានចល័ត |
+| **Holter monitor** | a portable ECG worn for hours or days during normal activity | ម៉ាស៊ីន ECG ចល័ត ពាក់រាប់ម៉ោង ឬរាប់ថ្ងៃ ពេលធ្វើសកម្មភាពធម្មតា |
+| **Atria / ventricles** | the two upper / two lower chambers of the heart | បន្ទប់បេះដូងខាងលើពីរ / បន្ទប់បេះដូងខាងក្រោមពីរ |
+| **Sinus rhythm** | the normal rhythm, set by the heart's own pacemaker in the right atrium | ចង្វាក់ធម្មតា កំណត់ដោយអ្នកកំណត់ចង្វាក់ធម្មជាតិនៅបន្ទប់ខាងលើស្តាំ |
+| **P wave** | the small bump before the spike: the atria contracting | រលកតូចមុនកំពូលស្រួច៖ បន្ទប់ខាងលើកំពុងរួញ |
+| **QRS complex** | the tall sharp spike: the ventricles contracting | កំពូលស្រួចខ្ពស់៖ បន្ទប់ខាងក្រោមកំពុងរួញ |
+| **R peak** | the highest point of the QRS, used as the timestamp of the beat | ចំណុចខ្ពស់បំផុតនៃ QRS ប្រើជាពេលវេលាកំណត់នៃចង្វាក់នីមួយៗ |
+| **T wave** | the broad bump after the spike: the ventricles recovering | រលកធំមូលបន្ទាប់ពីកំពូលស្រួច៖ បន្ទប់ខាងក្រោមកំពុងស្តារឡើងវិញ |
+| **RR interval** | the time from one R peak to the next, i.e. the gap between beats | ពេលវេលាពី R peak មួយទៅ R peak បន្ទាប់ គឺចន្លោះរវាងចង្វាក់ពីរ |
+| **Ectopic beat** | a beat that starts somewhere other than the normal pacemaker | ចង្វាក់ដែលចេញពីទីតាំងផ្សេង មិនមែនពីអ្នកកំណត់ចង្វាក់ធម្មតា |
+| **Premature beat** | a beat that arrives earlier than the rhythm would predict | ចង្វាក់ដែលមកដល់មុនពេលកំណត់ |
+| **Supraventricular** | originating above the ventricles, in the atria or the junction | ចេញពីខាងលើបន្ទប់ក្រោម គឺនៅបន្ទប់ខាងលើ ឬចំណុចតភ្ជាប់ |
+| **Ventricular** | originating in the ventricles themselves | ចេញពីបន្ទប់បេះដូងខាងក្រោមផ្ទាល់ |
+| **Fusion beat** | a normal and a ventricular beat firing at once, blending into one shape | ចង្វាក់ធម្មតា និងចង្វាក់ពីបន្ទប់ក្រោម លោតព្រមគ្នា ទៅជារូបរាងតែមួយ |
+| **Escape beat** | a backup beat produced when the normal pacemaker misses | ចង្វាក់បម្រុង កើតឡើងពេលអ្នកកំណត់ចង្វាក់ធម្មតាខកខាន |
+| **Bundle branch block** | delayed conduction down one side; the beat is wide but normal in origin | ការបញ្ជូនសញ្ញាយឺតនៅម្ខាង ធ្វើឲ្យចង្វាក់ធាត់ ប៉ុន្តែប្រភពនៅតែធម្មតា |
+| **Paced beat** | a beat triggered by an implanted pacemaker, not by the heart itself | ចង្វាក់បង្កើតដោយម៉ាស៊ីនជំនួយចង្វាក់ដែលដាក់ក្នុងខ្លួន មិនមែនដោយបេះដូងផ្ទាល់ |
+| **Baseline wander** | slow drift of the whole trace, caused by breathing and movement | ការរសាត់យឺតៗនៃខ្សែក្រាបទាំងមូល បណ្តាលមកពីការដកដង្ហើម និងចលនា |
+| **AAMI EC57** | the standard that groups the raw beat labels into the N/S/V/F/Q classes | ស្តង់ដារដែលដាក់ស្លាកចង្វាក់ដើមជាក្រុម N/S/V/F/Q |
+
 ## 1. Data source
 
 **`01_data_source.csv`**
@@ -17,7 +46,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | Sampling rate | 360 Hz |
 | Samples/record | 650,000 |
 | Lead used | MLII x44 |
-| Load time | 25 s |
+| Load time | 50 s |
 
 ## 2. Annotations and class distribution
 
@@ -159,42 +188,42 @@ Companion to the README. Every table in this report is also saved as a CSV in
 
 **`12_hyperparameter_search.csv`**
 
-| split | model | params | cv_train_f1 | cv_test_f1 | cv_std | rank |
-|---|---|---|---|---|---|---|
-| inter-patient | linsvm | C=0.01 | 0.8273 | 0.3784 | 0.0698 | 1 |
-| inter-patient | linsvm | C=0.1 | 0.8413 | 0.3653 | 0.0705 | 2 |
-| inter-patient | linsvm | C=1.0 | 0.8451 | 0.3588 | 0.068 | 3 |
-| inter-patient | logreg | C=0.1 | 0.7404 | 0.3598 | 0.0837 | 1 |
-| inter-patient | logreg | C=1.0 | 0.7591 | 0.3488 | 0.0786 | 2 |
-| inter-patient | logreg | C=10.0 | 0.7737 | 0.3439 | 0.0799 | 3 |
-| inter-patient | logreg | C=0.01 | 0.7224 | 0.3415 | 0.0399 | 4 |
-| inter-patient | rbfsvm | C=1, gamma=scale | 0.9542 | 0.4414 | 0.1237 | 1 |
-| inter-patient | rbfsvm | C=10, gamma=scale | 0.979 | 0.4253 | 0.1094 | 2 |
-| inter-patient | rf | max_depth=6, min_samples_leaf=5 | 0.9134 | 0.4469 | 0.0983 | 1 |
-| inter-patient | rf | max_depth=6, min_samples_leaf=1 | 0.9108 | 0.4352 | 0.0888 | 2 |
-| inter-patient | rf | max_depth=8, min_samples_leaf=5 | 0.9661 | 0.4156 | 0.0767 | 3 |
-| inter-patient | rf | max_depth=12, min_samples_leaf=5 | 0.9894 | 0.4148 | 0.0769 | 4 |
-| inter-patient | rf | max_depth=8, min_samples_leaf=1 | 0.9708 | 0.4134 | 0.0706 | 5 |
-| inter-patient | rf | max_depth=None, min_samples_leaf=5 | 0.9918 | 0.4111 | 0.0755 | 6 |
-| inter-patient | rf | max_depth=12, min_samples_leaf=1 | 0.9957 | 0.4081 | 0.0678 | 7 |
-| inter-patient | rf | max_depth=None, min_samples_leaf=1 | 1.0 | 0.3868 | 0.0811 | 8 |
-| random | linsvm | C=1.0 | 0.8205 | 0.5085 | 0.072 | 1 |
-| random | linsvm | C=0.1 | 0.8183 | 0.5064 | 0.0781 | 2 |
-| random | linsvm | C=0.01 | 0.8013 | 0.4927 | 0.0898 | 3 |
-| random | logreg | C=0.01 | 0.6764 | 0.4871 | 0.0697 | 1 |
-| random | logreg | C=10.0 | 0.7 | 0.4862 | 0.0639 | 2 |
-| random | logreg | C=1.0 | 0.6975 | 0.4855 | 0.068 | 3 |
-| random | logreg | C=0.1 | 0.6896 | 0.482 | 0.0751 | 4 |
-| random | rbfsvm | C=1, gamma=scale | 0.8902 | 0.4885 | 0.1159 | 1 |
-| random | rbfsvm | C=10, gamma=scale | 0.971 | 0.4834 | 0.1205 | 2 |
-| random | rf | max_depth=6, min_samples_leaf=1 | 0.8526 | 0.5231 | 0.0735 | 1 |
-| random | rf | max_depth=8, min_samples_leaf=5 | 0.9207 | 0.517 | 0.0737 | 2 |
-| random | rf | max_depth=6, min_samples_leaf=5 | 0.8488 | 0.5169 | 0.0721 | 3 |
-| random | rf | max_depth=8, min_samples_leaf=1 | 0.9246 | 0.5166 | 0.0739 | 4 |
-| random | rf | max_depth=12, min_samples_leaf=5 | 0.9625 | 0.508 | 0.0709 | 5 |
-| random | rf | max_depth=None, min_samples_leaf=5 | 0.9813 | 0.5017 | 0.0742 | 6 |
-| random | rf | max_depth=12, min_samples_leaf=1 | 0.9699 | 0.4875 | 0.0636 | 7 |
-| random | rf | max_depth=None, min_samples_leaf=1 | 1.0 | 0.4694 | 0.0493 | 8 |
+| split | model | point | params | cv_train_f1 | cv_test_f1 | cv_std | rank |
+|---|---|---|---|---|---|---|---|
+| inter-patient | linsvm | 0 | C=0.01 | 0.8273 | 0.3784 | 0.0698 | 1 |
+| inter-patient | linsvm | 1 | C=0.1 | 0.8413 | 0.3653 | 0.0705 | 2 |
+| inter-patient | linsvm | 2 | C=1.0 | 0.8451 | 0.3588 | 0.068 | 3 |
+| inter-patient | logreg | 1 | C=0.1 | 0.7404 | 0.3598 | 0.0837 | 1 |
+| inter-patient | logreg | 2 | C=1.0 | 0.7591 | 0.3488 | 0.0786 | 2 |
+| inter-patient | logreg | 3 | C=10.0 | 0.7737 | 0.3439 | 0.0799 | 3 |
+| inter-patient | logreg | 0 | C=0.01 | 0.7224 | 0.3415 | 0.0399 | 4 |
+| inter-patient | rbfsvm | 0 | C=1, gamma=scale | 0.9542 | 0.4414 | 0.1237 | 1 |
+| inter-patient | rbfsvm | 1 | C=10, gamma=scale | 0.979 | 0.4253 | 0.1094 | 2 |
+| inter-patient | rf | 1 | max_depth=6, min_samples_leaf=5 | 0.9134 | 0.4469 | 0.0983 | 1 |
+| inter-patient | rf | 0 | max_depth=6, min_samples_leaf=1 | 0.9108 | 0.4352 | 0.0888 | 2 |
+| inter-patient | rf | 3 | max_depth=8, min_samples_leaf=5 | 0.9661 | 0.4156 | 0.0767 | 3 |
+| inter-patient | rf | 5 | max_depth=12, min_samples_leaf=5 | 0.9894 | 0.4148 | 0.0769 | 4 |
+| inter-patient | rf | 2 | max_depth=8, min_samples_leaf=1 | 0.9708 | 0.4134 | 0.0706 | 5 |
+| inter-patient | rf | 7 | max_depth=None, min_samples_leaf=5 | 0.9918 | 0.4111 | 0.0755 | 6 |
+| inter-patient | rf | 4 | max_depth=12, min_samples_leaf=1 | 0.9957 | 0.4081 | 0.0678 | 7 |
+| inter-patient | rf | 6 | max_depth=None, min_samples_leaf=1 | 1.0 | 0.3868 | 0.0811 | 8 |
+| random | linsvm | 2 | C=1.0 | 0.8205 | 0.5085 | 0.072 | 1 |
+| random | linsvm | 1 | C=0.1 | 0.8183 | 0.5064 | 0.0781 | 2 |
+| random | linsvm | 0 | C=0.01 | 0.8013 | 0.4927 | 0.0898 | 3 |
+| random | logreg | 0 | C=0.01 | 0.6764 | 0.4871 | 0.0697 | 1 |
+| random | logreg | 3 | C=10.0 | 0.7 | 0.4862 | 0.0639 | 2 |
+| random | logreg | 2 | C=1.0 | 0.6975 | 0.4855 | 0.068 | 3 |
+| random | logreg | 1 | C=0.1 | 0.6896 | 0.482 | 0.0751 | 4 |
+| random | rbfsvm | 0 | C=1, gamma=scale | 0.8902 | 0.4885 | 0.1159 | 1 |
+| random | rbfsvm | 1 | C=10, gamma=scale | 0.971 | 0.4834 | 0.1205 | 2 |
+| random | rf | 0 | max_depth=6, min_samples_leaf=1 | 0.8526 | 0.5231 | 0.0735 | 1 |
+| random | rf | 3 | max_depth=8, min_samples_leaf=5 | 0.9207 | 0.517 | 0.0737 | 2 |
+| random | rf | 1 | max_depth=6, min_samples_leaf=5 | 0.8488 | 0.5169 | 0.0721 | 3 |
+| random | rf | 2 | max_depth=8, min_samples_leaf=1 | 0.9246 | 0.5166 | 0.0739 | 4 |
+| random | rf | 5 | max_depth=12, min_samples_leaf=5 | 0.9625 | 0.508 | 0.0709 | 5 |
+| random | rf | 7 | max_depth=None, min_samples_leaf=5 | 0.9813 | 0.5017 | 0.0742 | 6 |
+| random | rf | 4 | max_depth=12, min_samples_leaf=1 | 0.9699 | 0.4875 | 0.0636 | 7 |
+| random | rf | 6 | max_depth=None, min_samples_leaf=1 | 1.0 | 0.4694 | 0.0493 | 8 |
 
 ## 8. Model evaluation
 
@@ -202,14 +231,14 @@ Companion to the README. Every table in this report is also saved as a CSV in
 
 | split | model | accuracy | bal_acc | f1_macro | f1_weighted | kappa | train_f1 | train_secs | log_loss | brier | f1_N | f1_S | f1_V | f1_F | overfit_gap |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| random | logreg | 0.8863 | 0.8981 | 0.6371 | 0.9122 | 0.5947 | 0.6442 | 18.3 | 0.351 | 0.1788 | 0.936 | 0.605 | 0.806 | 0.201 | 0.0071 |
-| random | linsvm | 0.9667 | 0.8645 | 0.7929 | 0.9689 | 0.8377 | 0.7884 | 15.3 |  |  | 0.984 | 0.738 | 0.913 | 0.537 | -0.0045 |
-| random | rf | 0.9548 | 0.935 | 0.7735 | 0.9605 | 0.7999 | 0.7835 | 853.0 | 0.2486 | 0.0989 | 0.976 | 0.7 | 0.923 | 0.496 | 0.01 |
-| random | rbfsvm | 0.9786 | 0.945 | 0.8491 | 0.9807 | 0.896 | 0.8774 | 98.8 |  |  | 0.989 | 0.865 | 0.967 | 0.576 | 0.0283 |
-| inter-patient | logreg | 0.7668 | 0.5762 | 0.4624 | 0.8271 | 0.3209 | 0.6913 | 15.1 | 0.7418 | 0.3623 | 0.865 | 0.122 | 0.806 | 0.057 | 0.2289 |
-| inter-patient | linsvm | 0.8987 | 0.5478 | 0.4929 | 0.908 | 0.5661 | 0.8172 | 15.4 |  |  | 0.957 | 0.161 | 0.765 | 0.089 | 0.3243 |
-| inter-patient | rf | 0.8837 | 0.5964 | 0.5298 | 0.898 | 0.5197 | 0.8824 | 834.6 | 0.4397 | 0.2094 | 0.935 | 0.185 | 0.887 | 0.112 | 0.3526 |
-| inter-patient | rbfsvm | 0.8441 | 0.512 | 0.4795 | 0.8756 | 0.43 | 0.9487 | 80.0 |  |  | 0.916 | 0.137 | 0.845 | 0.02 | 0.4692 |
+| random | logreg | 0.8863 | 0.8981 | 0.6371 | 0.9122 | 0.5947 | 0.6442 | 16.1 | 0.351 | 0.1788 | 0.936 | 0.605 | 0.806 | 0.201 | 0.0071 |
+| random | linsvm | 0.9667 | 0.8645 | 0.7929 | 0.9689 | 0.8377 | 0.7884 | 17.9 |  |  | 0.984 | 0.738 | 0.913 | 0.537 | -0.0045 |
+| random | rf | 0.9548 | 0.935 | 0.7735 | 0.9605 | 0.7999 | 0.7835 | 889.7 | 0.2486 | 0.0989 | 0.976 | 0.7 | 0.923 | 0.496 | 0.01 |
+| random | rbfsvm | 0.9786 | 0.945 | 0.8491 | 0.9807 | 0.896 | 0.8774 | 94.0 |  |  | 0.989 | 0.865 | 0.967 | 0.576 | 0.0283 |
+| inter-patient | logreg | 0.7668 | 0.5762 | 0.4624 | 0.8271 | 0.3209 | 0.6913 | 14.6 | 0.7418 | 0.3623 | 0.865 | 0.122 | 0.806 | 0.057 | 0.2289 |
+| inter-patient | linsvm | 0.8987 | 0.5478 | 0.4929 | 0.908 | 0.5661 | 0.8172 | 17.0 |  |  | 0.957 | 0.161 | 0.765 | 0.089 | 0.3243 |
+| inter-patient | rf | 0.8837 | 0.5964 | 0.5298 | 0.898 | 0.5197 | 0.8824 | 850.2 | 0.4397 | 0.2094 | 0.935 | 0.185 | 0.887 | 0.112 | 0.3526 |
+| inter-patient | rbfsvm | 0.8441 | 0.512 | 0.4795 | 0.8756 | 0.43 | 0.9487 | 74.1 |  |  | 0.916 | 0.137 | 0.845 | 0.02 | 0.4692 |
 
 **`14_per_class_metrics.csv`**
 
@@ -261,15 +290,58 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | inter-patient | F | V | 96 |
 | inter-patient | F | F | 115 |
 
+**`16_per_class_all_models.csv`**
+
+| split | model | class | meaning | precision | recall | f1 | support |
+|---|---|---|---|---|---|---|---|
+| random | logreg | N | Normal | 0.995 | 0.884 | 0.936 | 22522 |
+| random | logreg | S | Supraventricular | 0.454 | 0.906 | 0.605 | 695 |
+| random | logreg | V | Ventricular | 0.726 | 0.906 | 0.806 | 1752 |
+| random | logreg | F | Fusion | 0.113 | 0.896 | 0.201 | 201 |
+| random | linsvm | N | Normal | 0.992 | 0.977 | 0.984 | 22522 |
+| random | linsvm | S | Supraventricular | 0.652 | 0.85 | 0.738 | 695 |
+| random | linsvm | V | Ventricular | 0.916 | 0.909 | 0.913 | 1752 |
+| random | linsvm | F | Fusion | 0.428 | 0.721 | 0.537 | 201 |
+| random | rf | N | Normal | 0.997 | 0.955 | 0.976 | 22522 |
+| random | rf | S | Supraventricular | 0.559 | 0.937 | 0.7 | 695 |
+| random | rf | V | Ventricular | 0.886 | 0.962 | 0.923 | 1752 |
+| random | rf | F | Fusion | 0.344 | 0.886 | 0.496 | 201 |
+| random | rbfsvm | N | Normal | 0.997 | 0.981 | 0.989 | 22522 |
+| random | rbfsvm | S | Supraventricular | 0.814 | 0.922 | 0.865 | 695 |
+| random | rbfsvm | V | Ventricular | 0.958 | 0.976 | 0.967 | 1752 |
+| random | rbfsvm | F | Fusion | 0.423 | 0.9 | 0.576 | 201 |
+| inter-patient | logreg | N | Normal | 0.962 | 0.786 | 0.865 | 44240 |
+| inter-patient | logreg | S | Supraventricular | 0.09 | 0.193 | 0.122 | 1837 |
+| inter-patient | logreg | V | Ventricular | 0.749 | 0.872 | 0.806 | 3220 |
+| inter-patient | logreg | F | Fusion | 0.03 | 0.454 | 0.057 | 388 |
+| inter-patient | linsvm | N | Normal | 0.977 | 0.937 | 0.957 | 44240 |
+| inter-patient | linsvm | S | Supraventricular | 0.179 | 0.146 | 0.161 | 1837 |
+| inter-patient | linsvm | V | Ventricular | 0.671 | 0.889 | 0.765 | 3220 |
+| inter-patient | linsvm | F | Fusion | 0.056 | 0.219 | 0.089 | 388 |
+| inter-patient | rf | N | Normal | 0.961 | 0.911 | 0.935 | 44240 |
+| inter-patient | rf | S | Supraventricular | 0.166 | 0.207 | 0.185 | 1837 |
+| inter-patient | rf | V | Ventricular | 0.816 | 0.971 | 0.887 | 3220 |
+| inter-patient | rf | F | Fusion | 0.069 | 0.296 | 0.112 | 388 |
+| inter-patient | rbfsvm | N | Normal | 0.963 | 0.874 | 0.916 | 44240 |
+| inter-patient | rbfsvm | S | Supraventricular | 0.167 | 0.116 | 0.137 | 1837 |
+| inter-patient | rbfsvm | V | Ventricular | 0.768 | 0.939 | 0.845 | 3220 |
+| inter-patient | rbfsvm | F | Fusion | 0.011 | 0.119 | 0.02 | 388 |
+
 ![07_model_comparison](figures/07_model_comparison.png)
 
 ![08_per_class_f1](figures/08_per_class_f1.png)
 
 ![09_confusion_matrices](figures/09_confusion_matrices.png)
 
+![10_per_class_all_models](figures/10_per_class_all_models.png)
+
+![11_confusion_all_models](figures/11_confusion_all_models.png)
+
+![12_hyperparameter_curves](figures/12_hyperparameter_curves.png)
+
 ## 9. Feature importance
 
-**`16_top_features.csv`**
+**`17_top_features.csv`**
 
 | rank | feature | family | importance |
 |---|---|---|---|
@@ -294,7 +366,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 19 | w0_energy | wavelet | 0.01706 |
 | 20 | morph11 | morph | 0.01573 |
 
-**`17_family_importance.csv`**
+**`18_family_importance.csv`**
 
 | family | total_importance | n_features | mean_importance | importance_per_feature_rank |
 |---|---|---|---|---|
@@ -303,11 +375,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | wavelet | 0.18352 | 13 | 0.01412 | 3 |
 | stats | 0.11095 | 6 | 0.01849 | 2 |
 
-![10_feature_importance](figures/10_feature_importance.png)
+![13_feature_importance](figures/13_feature_importance.png)
 
 ## 10. Feature family ablation
 
-**`18_family_ablation.csv`**
+**`19_family_ablation.csv`**
 
 | family | n_features | f1_macro | accuracy | f1_N | f1_S | f1_V | f1_F |
 |---|---|---|---|---|---|---|---|
@@ -317,11 +389,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | stats | 6 | 0.3826 | 0.9097 | 0.9531 | 0.001 | 0.5761 | 0.0 |
 | ALL | 59 | 0.4908 | 0.9463 | 0.971 | 0.0702 | 0.9221 | 0.0 |
 
-![11_family_ablation](figures/11_family_ablation.png)
+![14_family_ablation](figures/14_family_ablation.png)
 
 ## 11. Feature combinations
 
-**`19_feature_combinations.csv`**
+**`20_feature_combinations.csv`**
 
 | combination | n_features | f1_macro | accuracy | f1_N | f1_S | f1_V | f1_F |
 |---|---|---|---|---|---|---|---|
@@ -334,7 +406,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | morph+wavelet | 45 | 0.4252 | 0.9204 | 0.9566 | 0.0022 | 0.7419 | 0.0 |
 | morph | 32 | 0.4126 | 0.92 | 0.9604 | 0.0033 | 0.6869 | 0.0 |
 
-**`20_combination_verdict.csv`**
+**`21_combination_verdict.csv`**
 
 | question | answer | f1_macro | f1_S |
 |---|---|---|---|
@@ -342,11 +414,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | Using every feature | ALL | 0.4908 | 0.0702 |
 | Cost of adding the rest | -0.0301 macro F1 |  | -0.1092 |
 
-![12_feature_combinations](figures/12_feature_combinations.png)
+![15_feature_combinations](figures/15_feature_combinations.png)
 
 ## 12. Class imbalance experiment
 
-**`21_imbalance_experiment.csv`**
+**`22_imbalance_experiment.csv`**
 
 | strategy | train_rows | N_to_F_ratio | f1_macro | accuracy | f1_N | f1_S | f1_V | f1_F |
 |---|---|---|---|---|---|---|---|---|
@@ -356,7 +428,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | SMOTE | 89908 | 1:1 | 0.5134 | 0.914 | 0.953 | 0.1773 | 0.922 | 0.0013 |
 | random undersample | 812 | 1:1 | 0.5204 | 0.819 | 0.8932 | 0.1687 | 0.885 | 0.1344 |
 
-**`22_imbalance_verdict.csv`**
+**`23_imbalance_verdict.csv`**
 
 | finding | value |
 |---|---|
@@ -366,11 +438,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | F1(S) from feature choice instead (section 13) | 0.1982 (rr+wavelet) |
 | Conclusion | imbalance matters |
 
-![13_imbalance_experiment](figures/13_imbalance_experiment.png)
+![16_imbalance_experiment](figures/16_imbalance_experiment.png)
 
 ## 13. Learning curve
 
-**`23_learning_curve.csv`**
+**`24_learning_curve.csv`**
 
 | fraction | train_beats | train_patients | train_f1 | test_f1 | test_acc | f1_S | f1_V | gap |
 |---|---|---|---|---|---|---|---|---|
@@ -381,17 +453,17 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 0.7 | 17500 | 22 | 1.0 | 0.4915 | 0.9448 | 0.0848 | 0.911 | 0.5085 |
 | 1.0 | 25000 | 22 | 1.0 | 0.4908 | 0.9463 | 0.0702 | 0.9221 | 0.5092 |
 
-**`24_learning_curve_gain.csv`**
+**`25_learning_curve_gain.csv`**
 
 | data_increase | macro_f1_gain | f1_S_gain | patients_gain |
 |---|---|---|---|
 | 20x | 0.0233 | 0.068 | 0 |
 
-![14_learning_curve](figures/14_learning_curve.png)
+![17_learning_curve](figures/17_learning_curve.png)
 
 ## 14. Validation curves
 
-**`25_depth_curve.csv`**
+**`26_depth_curve.csv`**
 
 | max_depth | train_f1 | test_f1 | gap | f1_S | accuracy |
 |---|---|---|---|---|---|
@@ -402,7 +474,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 12 | 0.9919 | 0.5243 | 0.4676 | 0.1854 | 0.9416 |
 | None | 1.0 | 0.4908 | 0.5092 | 0.0702 | 0.9463 |
 
-**`26_tree_count_curve.csv`**
+**`27_tree_count_curve.csv`**
 
 | n_estimators | train_f1 | test_f1 | gap |
 |---|---|---|---|
@@ -412,11 +484,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 200 | 1.0 | 0.4908 | 0.5092 |
 | 400 | 1.0 | 0.4919 | 0.5081 |
 
-![15_validation_curves](figures/15_validation_curves.png)
+![18_validation_curves](figures/18_validation_curves.png)
 
 ## 15. Cross-validation
 
-**`27_cross_validation.csv`**
+**`28_cross_validation.csv`**
 
 | fold | train_patients | test_patients | test_beats | f1_macro | accuracy | f1_N | f1_S | f1_V | f1_F |
 |---|---|---|---|---|---|---|---|---|---|
@@ -428,11 +500,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | mean | 35.2 | 8.8 | 20135.8 | 0.4882 | 0.9461 | 0.9712 | 0.1242 | 0.8551 | 0.0024 |
 | std | 1.0954 | 1.0954 | 1710.7183 | 0.0629 | 0.0375 | 0.0218 | 0.1754 | 0.0849 | 0.0053 |
 
-![16_cross_validation](figures/16_cross_validation.png)
+![19_cross_validation](figures/19_cross_validation.png)
 
 ## 16. Per-record error analysis
 
-**`28_per_record.csv`**
+**`29_per_record.csv`**
 
 | record | beats | accuracy | n_N | recall_N | n_S | recall_S | n_V | recall_V | n_F | recall_F |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -459,7 +531,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 100 | 2271 | 0.9996 | 2237 | 0.9996 | 33 | 1.0 | 1 | 1.0 | 0 |  |
 | 117 | 1534 | 1.0 | 1533 | 1.0 | 1 | 1.0 | 0 |  | 0 |  |
 
-**`29_who_holds_class_S.csv`**
+**`30_who_holds_class_S.csv`**
 
 | record | S_beats | share_of_DS2_S_pct | recall_S |
 |---|---|---|---|
@@ -480,7 +552,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 121 | 1 | 0.1 | 1.0 |
 | 231 | 1 | 0.1 | 0.0 |
 
-**`30_single_patient_effect.csv`**
+**`31_single_patient_effect.csv`**
 
 | test_set | patients | beats | f1_macro | f1_S | f1_V |
 |---|---|---|---|---|---|
@@ -488,11 +560,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | DS2 without record 232 | 21 | 47905 | 0.5374 | 0.2414 | 0.9224 |
 | change | -1 | -1780 | 0.0466 | 0.1712 | 0.0003 |
 
-![17_per_record_analysis](figures/17_per_record_analysis.png)
+![20_per_record_analysis](figures/20_per_record_analysis.png)
 
 ## 17. Honest model selection
 
-**`31_honest_selection.csv`**
+**`32_honest_selection.csv`**
 
 | max_depth | DS1_inner_cv_f1 | DS1_inner_cv_sd | DS2_f1 |
 |---|---|---|---|
@@ -503,7 +575,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 12 | 0.4089 | 0.0668 | 0.5243 |
 | None | 0.3868 | 0.0812 | 0.4908 |
 
-**`32_selection_bias.csv`**
+**`33_selection_bias.csv`**
 
 | procedure | max_depth | reported_f1 |
 |---|---|---|
@@ -511,11 +583,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | Chosen by reading DS2 (what not to do) | 6 | 0.5419 |
 | Optimism from letting the test set choose |  | 0.0045 |
 
-![18_honest_selection](figures/18_honest_selection.png)
+![21_honest_selection](figures/21_honest_selection.png)
 
 ## 18. Three-class variant
 
-**`33_three_class.csv`**
+**`34_three_class.csv`**
 
 | class | meaning | precision | recall | f1 | support |
 |---|---|---|---|---|---|
@@ -524,7 +596,7 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | V | Ventricular | 0.935 | 0.9 | 0.917 | 3220 |
 | MACRO |  | 0.853 | 0.643 | 0.651 | 49297 |
 
-**`34_three_vs_four.csv`**
+**`35_three_vs_four.csv`**
 
 | task | classes | macro_f1 |
 |---|---|---|
@@ -532,11 +604,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 3 classes (N/S/V) | 3 | 0.6511 |
 | difference | -1 | 0.1213 |
 
-![19_three_class](figures/19_three_class.png)
+![22_three_class](figures/22_three_class.png)
 
 ## 19. Pipeline validation
 
-**`35_pipeline_validation.csv`**
+**`36_pipeline_validation.csv`**
 
 | baseline | f1_macro | accuracy | beats_always_N_by |
 |---|---|---|---|
@@ -546,11 +618,11 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | Labels shuffled in training | 0.2355 | 0.8904 | 0.0 |
 | Real model | 0.4908 | 0.9463 | 0.2553 |
 
-![20_pipeline_validation](figures/20_pipeline_validation.png)
+![23_pipeline_validation](figures/23_pipeline_validation.png)
 
 ## 20. Summary
 
-**`36_summary_of_findings.csv`**
+**`37_summary_of_findings.csv`**
 
 | n | finding | evidence | table | figure |
 |---|---|---|---|---|
@@ -558,18 +630,18 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | 2 | Accuracy hides the failure; macro F1 does not | accuracy falls +7.1 pts between protocols, macro F1 falls +24.4 pts | 13_model_metrics | 07_model_comparison |
 | 3 | Weighted F1 is accuracy wearing a different name | weighted F1 0.8980 vs accuracy 0.8837, difference 0.0143 | 13_model_metrics | 07_model_comparison |
 | 4 | Sharing patients between train and test inflates the rare classes | F1(S) 0.865 -> 0.185, F1(F) 0.576 -> 0.112 | 14_per_class_metrics | 08_per_class_f1 |
-| 5 | Class imbalance is not the bottleneck | five balancing strategies move F1(S) by only 0.1071 | 21_imbalance_experiment | 13_imbalance_experiment |
-| 6 | Only the timing features detect class S | RR alone F1(S) 0.0906, best of the other three families 0.0084 | 18_family_ablation | 11_family_ablation |
-| 7 | Adding every feature is worse than choosing a subset | rr+wavelet+stats macro F1 0.5209 vs ALL 0.4908 | 19_feature_combinations | 12_feature_combinations |
-| 8 | More beats do not help; more patients would | 20x more training beats buys +0.0233 macro F1 | 23_learning_curve | 14_learning_curve |
-| 9 | Depth causes the overfitting, not tree count | gap 0.249 at depth 4 vs 0.509 unlimited; 0.508 to 0.536 across 10-400 trees | 25_depth_curve | 15_validation_curves |
-| 10 | The result is one patient away from looking different | excluding record 232 changes F1(S) by +0.1712 | 30_single_patient_effect | 17_per_record_analysis |
-| 11 | Choosing hyperparameters on the test set adds optimism | +0.0045 macro F1 from letting DS2 pick the depth | 32_selection_bias | 18_honest_selection |
-| 12 | Fold-to-fold variation is larger than any tuning gain | grouped 5-fold macro F1 0.4882 +/- 0.0629 | 27_cross_validation | 16_cross_validation |
-| 13 | The pipeline has no leakage of its own | shuffled labels score 0.2355 against the always-N baseline 0.2355 | 35_pipeline_validation | 20_pipeline_validation |
-| 14 | Dropping class F does not rescue the task | 3-class macro F1 0.6511 vs 4-class 0.5298 | 34_three_vs_four | 19_three_class |
+| 5 | Class imbalance is not the bottleneck | five balancing strategies move F1(S) by only 0.1071 | 22_imbalance_experiment | 16_imbalance_experiment |
+| 6 | Only the timing features detect class S | RR alone F1(S) 0.0906, best of the other three families 0.0084 | 19_family_ablation | 14_family_ablation |
+| 7 | Adding every feature is worse than choosing a subset | rr+wavelet+stats macro F1 0.5209 vs ALL 0.4908 | 20_feature_combinations | 15_feature_combinations |
+| 8 | More beats do not help; more patients would | 20x more training beats buys +0.0233 macro F1 | 24_learning_curve | 17_learning_curve |
+| 9 | Depth causes the overfitting, not tree count | gap 0.249 at depth 4 vs 0.509 unlimited; 0.508 to 0.536 across 10-400 trees | 26_depth_curve | 18_validation_curves |
+| 10 | The result is one patient away from looking different | excluding record 232 changes F1(S) by +0.1712 | 31_single_patient_effect | 20_per_record_analysis |
+| 11 | Choosing hyperparameters on the test set adds optimism | +0.0045 macro F1 from letting DS2 pick the depth | 33_selection_bias | 21_honest_selection |
+| 12 | Fold-to-fold variation is larger than any tuning gain | grouped 5-fold macro F1 0.4882 +/- 0.0629 | 28_cross_validation | 19_cross_validation |
+| 13 | The pipeline has no leakage of its own | shuffled labels score 0.2355 against the always-N baseline 0.2355 | 36_pipeline_validation | 23_pipeline_validation |
+| 14 | Dropping class F does not rescue the task | 3-class macro F1 0.6511 vs 4-class 0.5298 | 35_three_vs_four | 22_three_class |
 
-**`37_what_moves_the_result.csv`**
+**`38_what_moves_the_result.csv`**
 
 | lever | macro_f1_swing |
 |---|---|
@@ -580,37 +652,54 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | Tree count (10 to 400) | 0.0326 |
 | Class balancing (5 strategies) | 0.0296 |
 
-![21_what_moves_the_result](figures/21_what_moves_the_result.png)
+![24_what_moves_the_result](figures/24_what_moves_the_result.png)
 
 ## 21. Files
 
-**`38_file_manifest.csv`**
+**`39_file_manifest.csv`**
 
 | folder | file | kind | kb |
 |---|---|---|---|
-| code | pipeline.py | py | 61.0 |
-| notebook | ECG_arrhythmia_classification.ipynb | ipynb | 1783.1 |
+| . | README.md | md | 9.5 |
+| code | pipeline.py | py | 65.9 |
+| notebook | ECG_arrhythmia_classification.ipynb | ipynb | 2098.9 |
+| results | REPORT.md | md | 26.7 |
 | results/figures | 01_class_distribution.png | png | 32.2 |
 | results/figures | 02_signal_annotated.png | png | 87.1 |
 | results/figures | 03_beat_morphology.png | png | 184.2 |
 | results/figures | 04_cleaning.png | png | 163.1 |
 | results/figures | 05_minority_concentration.png | png | 47.2 |
-| results/figures | 06_feature_correlation.png | png | 105.9 |
+| results/figures | 06_feature_correlation.png | png | 107.7 |
 | results/figures | 07_model_comparison.png | png | 60.5 |
 | results/figures | 08_per_class_f1.png | png | 54.4 |
 | results/figures | 09_confusion_matrices.png | png | 82.2 |
 | results/figures | 10_feature_importance.png | png | 93.7 |
+| results/figures | 10_per_class_all_models.png | png | 57.0 |
+| results/figures | 11_confusion_all_models.png | png | 161.9 |
 | results/figures | 11_family_ablation.png | png | 45.7 |
 | results/figures | 12_feature_combinations.png | png | 60.4 |
+| results/figures | 12_hyperparameter_curves.png | png | 96.3 |
+| results/figures | 13_feature_importance.png | png | 93.7 |
 | results/figures | 13_imbalance_experiment.png | png | 73.3 |
+| results/figures | 14_family_ablation.png | png | 45.7 |
 | results/figures | 14_learning_curve.png | png | 54.2 |
+| results/figures | 15_feature_combinations.png | png | 60.4 |
 | results/figures | 15_validation_curves.png | png | 66.2 |
 | results/figures | 16_cross_validation.png | png | 51.3 |
+| results/figures | 16_imbalance_experiment.png | png | 74.6 |
+| results/figures | 17_learning_curve.png | png | 54.2 |
 | results/figures | 17_per_record_analysis.png | png | 96.8 |
 | results/figures | 18_honest_selection.png | png | 52.2 |
+| results/figures | 18_validation_curves.png | png | 67.3 |
+| results/figures | 19_cross_validation.png | png | 47.7 |
 | results/figures | 19_three_class.png | png | 58.4 |
+| results/figures | 20_per_record_analysis.png | png | 93.1 |
 | results/figures | 20_pipeline_validation.png | png | 42.5 |
+| results/figures | 21_honest_selection.png | png | 52.3 |
 | results/figures | 21_what_moves_the_result.png | png | 62.6 |
+| results/figures | 22_three_class.png | png | 58.4 |
+| results/figures | 23_pipeline_validation.png | png | 42.5 |
+| results/figures | 24_what_moves_the_result.png | png | 61.4 |
 | results/tables | 01_data_source.csv | csv | 0.2 |
 | results/tables | 02_raw_symbols.csv | csv | 0.1 |
 | results/tables | 03_class_distribution.csv | csv | 0.1 |
@@ -622,29 +711,54 @@ Companion to the README. Every table in this report is also saved as a CSV in
 | results/tables | 09_univariate_separation.csv | csv | 0.4 |
 | results/tables | 10_validation_protocols.csv | csv | 0.1 |
 | results/tables | 11_models.csv | csv | 0.3 |
-| results/tables | 12_hyperparameter_search.csv | csv | 2.0 |
+| results/tables | 12_hyperparameter_search.csv | csv | 2.1 |
 | results/tables | 13_model_metrics.csv | csv | 0.9 |
 | results/tables | 14_per_class_metrics.csv | csv | 0.5 |
 | results/tables | 15_confusion_matrix.csv | csv | 0.6 |
+| results/tables | 16_per_class_all_models.csv | csv | 1.7 |
 | results/tables | 16_top_features.csv | csv | 0.5 |
 | results/tables | 17_family_importance.csv | csv | 0.2 |
+| results/tables | 17_top_features.csv | csv | 0.5 |
 | results/tables | 18_family_ablation.csv | csv | 0.3 |
+| results/tables | 18_family_importance.csv | csv | 0.2 |
+| results/tables | 19_family_ablation.csv | csv | 0.3 |
 | results/tables | 19_feature_combinations.csv | csv | 0.5 |
 | results/tables | 20_combination_verdict.csv | csv | 0.2 |
+| results/tables | 20_feature_combinations.csv | csv | 0.5 |
+| results/tables | 21_combination_verdict.csv | csv | 0.2 |
 | results/tables | 21_imbalance_experiment.csv | csv | 0.4 |
+| results/tables | 22_imbalance_experiment.csv | csv | 0.4 |
 | results/tables | 22_imbalance_verdict.csv | csv | 0.3 |
+| results/tables | 23_imbalance_verdict.csv | csv | 0.3 |
 | results/tables | 23_learning_curve.csv | csv | 0.4 |
+| results/tables | 24_learning_curve.csv | csv | 0.4 |
 | results/tables | 24_learning_curve_gain.csv | csv | 0.1 |
 | results/tables | 25_depth_curve.csv | csv | 0.3 |
+| results/tables | 25_learning_curve_gain.csv | csv | 0.1 |
+| results/tables | 26_depth_curve.csv | csv | 0.3 |
 | results/tables | 26_tree_count_curve.csv | csv | 0.1 |
 | results/tables | 27_cross_validation.csv | csv | 0.5 |
+| results/tables | 27_tree_count_curve.csv | csv | 0.1 |
+| results/tables | 28_cross_validation.csv | csv | 0.5 |
 | results/tables | 28_per_record.csv | csv | 1.0 |
+| results/tables | 29_per_record.csv | csv | 1.0 |
 | results/tables | 29_who_holds_class_S.csv | csv | 0.3 |
 | results/tables | 30_single_patient_effect.csv | csv | 0.2 |
+| results/tables | 30_who_holds_class_S.csv | csv | 0.3 |
 | results/tables | 31_honest_selection.csv | csv | 0.2 |
+| results/tables | 31_single_patient_effect.csv | csv | 0.2 |
+| results/tables | 32_honest_selection.csv | csv | 0.2 |
 | results/tables | 32_selection_bias.csv | csv | 0.2 |
+| results/tables | 33_selection_bias.csv | csv | 0.2 |
 | results/tables | 33_three_class.csv | csv | 0.2 |
+| results/tables | 34_three_class.csv | csv | 0.2 |
 | results/tables | 34_three_vs_four.csv | csv | 0.1 |
 | results/tables | 35_pipeline_validation.csv | csv | 0.2 |
+| results/tables | 35_three_vs_four.csv | csv | 0.1 |
+| results/tables | 36_pipeline_validation.csv | csv | 0.2 |
 | results/tables | 36_summary_of_findings.csv | csv | 2.0 |
+| results/tables | 37_summary_of_findings.csv | csv | 2.0 |
 | results/tables | 37_what_moves_the_result.csv | csv | 0.2 |
+| results/tables | 38_file_manifest.csv | csv | 2.8 |
+| results/tables | 38_what_moves_the_result.csv | csv | 0.2 |
+| results/tables | 39_documents.csv | csv | 0.1 |

@@ -1,0 +1,6 @@
+baseline,f1_macro,accuracy,beats_always_N_by
+Always predict N,0.2355,0.8904,0.0
+Uniform random,0.1435,0.2499,-0.092
+Random from class prior,0.2496,0.8055,0.0141
+Labels shuffled in training,0.2355,0.8904,0.0
+Real model,0.4908,0.9463,0.2553

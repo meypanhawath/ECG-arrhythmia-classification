@@ -1,0 +1,7 @@
+lever,macro_f1_swing
+Evaluation protocol (random vs inter-patient),0.2437
+Feature subset (8 combinations),0.1083
+Choice of algorithm (4 models),0.0674
+Tree depth (6 values),0.0511
+Tree count (10 to 400),0.0326
+Class balancing (5 strategies),0.0296

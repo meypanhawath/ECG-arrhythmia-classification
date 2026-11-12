@@ -11,6 +11,11 @@ Cells that only work inside Colab (Drive mount, GitHub push) are left out.
 
 
 # ============================================================================
+# Medical terms used in this notebook / ពាក្យបច្ចេកទេសវេជ្ជសាស្ត្រ
+# ============================================================================
+
+
+# ============================================================================
 # 1. Setup
 # ============================================================================
 
@@ -404,12 +409,12 @@ for b in bounds[:-1]:
     ax[0].axhline(b-0.5, color="black", lw=1.2)
     ax[0].axvline(b-0.5, color="black", lw=1.2)
 mids = [0] + bounds
-for i, k in enumerate(["rr", "stats", "wavelet", "morph"]):
-    m = (mids[i] + mids[i+1])/2 - 0.5
-    ax[0].text(m, -2.5, k, ha="center", fontsize=10)
-    ax[0].text(-2.5, m, k, va="center", ha="right", fontsize=10, rotation=90)
-ax[0].set_xticks([]); ax[0].set_yticks([]); ax[0].grid(False)
-ax[0].set_title("absolute correlation between the %d kept features" % len(FEATURES))
+names   = ["rr", "stats", "wavelet", "morph"]
+centres = [(mids[i] + mids[i+1])/2 - 0.5 for i in range(len(names))]
+ax[0].set_xticks(centres); ax[0].set_xticklabels(names, fontsize=9)
+ax[0].set_yticks(centres); ax[0].set_yticklabels(names, fontsize=9, rotation=90, va="center")
+ax[0].tick_params(length=0); ax[0].grid(False)
+ax[0].set_title("absolute correlation between the %d kept features" % len(FEATURES), pad=12)
 fig.colorbar(im, ax=ax[0], fraction=0.046)
 
 fstat = {}
@@ -542,8 +547,8 @@ RES_MODELS["inter-patient"] = run_split(
 grid_rows = []
 for (split, name), df in GRID_LOG.items():
     pcols = [c for c in df.columns if c.startswith("param_")]
-    for _, r in df.iterrows():
-        row = {"split": split, "model": name,
+    for point, (_, r) in enumerate(df.iterrows()):
+        row = {"split": split, "model": name, "point": point,
                "params": ", ".join(f"{c.replace('param_clf__','')}={r[c]}" for c in pcols),
                "cv_train_f1": round(r["mean_train_score"], 4),
                "cv_test_f1":  round(r["mean_test_score"], 4),
@@ -673,6 +678,87 @@ for split, pack in RES_MODELS.items():
 save_table(pd.DataFrame(cm_rows), "15_confusion_matrix", show=False)
 print("confusion matrices saved")
 
+pc_all = []
+for split, pack in RES_MODELS.items():
+    yte = pack["ytest"]
+    for name, r in pack["results"].items():
+        p, rc, f1v, sup = precision_recall_fscore_support(yte, r["pred"], labels=CLASSES,
+                                                          zero_division=0)
+        for i, c in enumerate(CLASSES):
+            pc_all.append({"split": split, "model": name, "class": c,
+                           "meaning": CLASS_NAME[c], "precision": round(p[i], 3),
+                           "recall": round(rc[i], 3), "f1": round(f1v[i], 3),
+                           "support": int(sup[i])})
+pc_all = pd.DataFrame(pc_all)
+save_table(pc_all, "16_per_class_all_models", show=False)
+print(pc_all[pc_all.split == "inter-patient"].to_string(index=False))
+
+MODEL_COL = {"logreg": "#2F3C7E", "linsvm": "#C87A2A",
+             "rbfsvm": "#990011", "rf": "#5F7A52"}
+
+fig, axes = plt.subplots(2, 3, figsize=(16, 8))
+for row, split in enumerate(["random", "inter-patient"]):
+    sub = pc_all[pc_all.split == split]
+    for col, metric in enumerate(["precision", "recall", "f1"]):
+        ax = axes[row, col]
+        xs = np.arange(len(CLASSES))
+        for i, m in enumerate(order):
+            v = [sub[(sub.model == m) & (sub["class"] == c)][metric].iloc[0] for c in CLASSES]
+            ax.bar(xs + (i - 1.5)*0.2, v, width=0.2, color=MODEL_COL[m], label=m)
+        ax.set_xticks(xs); ax.set_xticklabels(CLASSES)
+        ax.set_ylim(0, 1.08); ax.set_title(metric + " - " + split, fontsize=11)
+        if row == 0 and col == 0:
+            ax.legend(fontsize=8, ncol=2)
+plt.tight_layout()
+save_fig(fig, "10_per_class_all_models")
+
+fig, axes = plt.subplots(2, 4, figsize=(17, 8))
+for row, (split, pack) in enumerate(RES_MODELS.items()):
+    yte = pack["ytest"]
+    for col, name in enumerate(order):
+        ax   = axes[row, col]
+        pred = pack["results"][name]["pred"]
+        cm   = confusion_matrix(yte, pred, labels=CLASSES)
+        cmn  = cm / cm.sum(axis=1, keepdims=True)
+        ax.imshow(cmn, cmap="Blues", vmin=0, vmax=1)
+        for a in range(len(CLASSES)):
+            for b in range(len(CLASSES)):
+                ax.text(b, a, "%.0f%%" % (cmn[a, b]*100), ha="center", va="center",
+                        fontsize=9, color="white" if cmn[a, b] > 0.5 else "black")
+        ax.set_xticks(range(len(CLASSES))); ax.set_xticklabels(CLASSES, fontsize=9)
+        ax.set_yticks(range(len(CLASSES))); ax.set_yticklabels(CLASSES, fontsize=9)
+        ax.grid(False)
+        mf = f1_score(yte, pred, average="macro", labels=CLASSES, zero_division=0)
+        ax.set_title("%s  macro F1 %.3f" % (name, mf), fontsize=10)
+        if col == 0:
+            ax.set_ylabel(split + chr(10) + "true", fontsize=10)
+        if row == 1:
+            ax.set_xlabel("predicted", fontsize=9)
+plt.tight_layout()
+save_fig(fig, "11_confusion_all_models")
+
+gd = grid_df[grid_df.split == "inter-patient"].sort_values(["model", "point"])
+
+fig, axes = plt.subplots(1, 4, figsize=(17, 4.4))
+for ax, name in zip(axes, order):
+    sub = gd[gd.model == name]
+    xs  = range(len(sub))
+    ax.plot(xs, sub["cv_train_f1"], "o-", color="#C87A2A", label="train")
+    ax.plot(xs, sub["cv_test_f1"],  "o-", color="#990011", label="validation")
+    ax.fill_between(xs, sub["cv_test_f1"], sub["cv_train_f1"], color="#C87A2A", alpha=0.12)
+    ax.set_xticks(list(xs))
+    lbl = (sub["params"].str.replace("min_samples_leaf", "leaf", regex=False)
+                        .str.replace("max_depth", "depth", regex=False)
+                        .str.replace(", gamma=scale", "", regex=False))
+    ax.set_xticklabels(lbl, rotation=45, ha="right", fontsize=8)
+    ax.set_ylim(0, 1.05); ax.set_title(name, fontsize=11)
+    ax.set_ylabel("macro F1" if name == order[0] else "")
+    ax.legend(fontsize=8)
+fig.suptitle("train vs validation across each model's own hyperparameter sweep, "
+             "grouped 3-fold CV on the training patients", fontsize=11)
+plt.tight_layout()
+save_fig(fig, "12_hyperparameter_curves")
+
 
 # ============================================================================
 # 11. Feature importance
@@ -687,13 +773,13 @@ imp = pd.DataFrame({"feature": FEATURES,
                     "importance": rf_best.feature_importances_.round(5)})
 imp = imp.sort_values("importance", ascending=False).reset_index(drop=True)
 imp["rank"] = imp.index + 1
-save_table(imp.head(20)[["rank","feature","family","importance"]], "16_top_features")
+save_table(imp.head(20)[["rank","feature","family","importance"]], "17_top_features")
 
 fam_imp = (imp.groupby("family")["importance"].agg(["sum","count","mean"])
              .rename(columns={"sum":"total_importance","count":"n_features","mean":"mean_importance"})
              .sort_values("total_importance", ascending=False).round(5).reset_index())
 fam_imp["importance_per_feature_rank"] = fam_imp["mean_importance"].rank(ascending=False).astype(int)
-save_table(fam_imp, "17_family_importance")
+save_table(fam_imp, "18_family_importance")
 
 top = imp.head(20).iloc[::-1]
 fig, ax = plt.subplots(1, 2, figsize=(14, 5))
@@ -711,7 +797,7 @@ for i, r in fam_imp.iterrows():
 ax[1].set_ylabel("summed importance"); ax[1].set_title("importance by family")
 ax[1].set_ylim(0, fam_imp["total_importance"].max()*1.3)
 plt.tight_layout()
-save_fig(fig, "10_feature_importance")
+save_fig(fig, "13_feature_importance")
 
 
 # ============================================================================
@@ -747,7 +833,7 @@ for fam in ["rr", "morph", "wavelet", "stats", "ALL"]:
     abl.append({"family": fam, "n_features": len(FAMILIES[fam]), **r})
     print(f"  {fam:<8} macro F1 {r['f1_macro']:.4f}")
 abl = pd.DataFrame(abl)
-save_table(abl, "18_family_ablation")
+save_table(abl, "19_family_ablation")
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 4.2))
 ax[0].bar(abl["family"], abl["f1_macro"],
@@ -764,7 +850,7 @@ ax[1].set_xticks(xs); ax[1].set_xticklabels(abl["family"])
 ax[1].set_ylabel("F1"); ax[1].set_title("per-class F1 by family")
 ax[1].legend(fontsize=9)
 plt.tight_layout()
-save_fig(fig, "11_family_ablation")
+save_fig(fig, "14_family_ablation")
 
 
 # ============================================================================
@@ -789,7 +875,7 @@ for name, cols in COMBOS.items():
     comb.append({"combination": name, "n_features": len(cols), **r})
     print(f"  {name:<18} macro F1 {r['f1_macro']:.4f}   F1(S) {r['f1_S']:.4f}")
 comb = pd.DataFrame(comb).sort_values("f1_macro", ascending=False).reset_index(drop=True)
-save_table(comb, "19_feature_combinations")
+save_table(comb, "20_feature_combinations")
 
 best_c = comb.iloc[0]
 all_c  = comb[comb.combination == "ALL"].iloc[0]
@@ -802,7 +888,7 @@ verdict = pd.DataFrame([
      "answer": f"{all_c['f1_macro'] - best_c['f1_macro']:+.4f} macro F1",
      "f1_macro": np.nan, "f1_S": round(all_c["f1_S"] - best_c["f1_S"], 4)},
 ])
-save_table(verdict, "20_combination_verdict")
+save_table(verdict, "21_combination_verdict")
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 4.6))
 cb = comb.sort_values("f1_macro")
@@ -819,7 +905,7 @@ for i, v in enumerate(cb["f1_S"]):
 ax[1].set_xlabel("F1 on class S"); ax[1].set_title("the class that separates the combinations")
 ax[1].set_xlim(0, max(cb["f1_S"].max()*1.25, 0.05))
 plt.tight_layout()
-save_fig(fig, "12_feature_combinations")
+save_fig(fig, "15_feature_combinations")
 
 
 # ============================================================================
@@ -843,7 +929,7 @@ for name, (samp, weight) in IMB.items():
                 "N_to_F_ratio": ratio, **r})
     print(f"  {name:<26} macro F1 {r['f1_macro']:.4f}   F1(S) {r['f1_S']:.4f}")
 imb = pd.DataFrame(imb)
-save_table(imb, "21_imbalance_experiment")
+save_table(imb, "22_imbalance_experiment")
 
 spread = imb["f1_S"].max() - imb["f1_S"].min()
 base   = imb[imb.strategy == "class_weight balanced"]["f1_S"].iloc[0]
@@ -858,7 +944,7 @@ iv = pd.DataFrame([
     {"finding": "Conclusion",
      "value": "imbalance is not the bottleneck" if spread < 0.05 else "imbalance matters"},
 ])
-save_table(iv, "22_imbalance_verdict")
+save_table(iv, "23_imbalance_verdict")
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 4.4))
 ib = imb.iloc[::-1]
@@ -873,10 +959,11 @@ for i, c in enumerate(CLASSES):
     ax[1].bar(xs + i*w - 1.5*w, imb["f1_" + c], width=w, color=CLASS_COL[c], label=c)
 ax[1].set_xticks(xs)
 ax[1].set_xticklabels([s.replace(" ", "\n") for s in imb["strategy"]], fontsize=8)
-ax[1].set_ylabel("F1"); ax[1].set_title("per-class F1 is flat across strategies")
-ax[1].legend(fontsize=9)
+ax[1].set_ylabel("F1"); ax[1].set_title("per-class F1 across balancing strategies")
+ax[1].set_ylim(0, max(imb[["f1_" + c for c in CLASSES]].max().max()*1.35, 0.1))
+ax[1].legend(fontsize=9, ncol=4, loc="upper center")
 plt.tight_layout()
-save_fig(fig, "13_imbalance_experiment")
+save_fig(fig, "16_imbalance_experiment")
 
 
 # ============================================================================
@@ -897,7 +984,7 @@ for f in FRACS:
     print(f"  {len(sub):>6} beats -> test macro F1 {r['f1_macro']:.4f}")
 lc = pd.DataFrame(lc)
 lc["gap"] = (lc["train_f1"] - lc["test_f1"]).round(4)
-save_table(lc, "23_learning_curve")
+save_table(lc, "24_learning_curve")
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4.2))
 ax[0].plot(lc["train_beats"], lc["train_f1"], "o-", color="#C87A2A", label="train")
@@ -911,7 +998,7 @@ for c, col in [("f1_S", CLASS_COL["S"]), ("f1_V", CLASS_COL["V"])]:
 ax[1].set_xscale("log"); ax[1].set_xlabel("training beats"); ax[1].set_ylabel("F1")
 ax[1].set_title("more beats do not help the rare class"); ax[1].legend(fontsize=9)
 plt.tight_layout()
-save_fig(fig, "14_learning_curve")
+save_fig(fig, "17_learning_curve")
 
 gain = pd.DataFrame([{
     "data_increase": f"{lc['train_beats'].iloc[-1]/lc['train_beats'].iloc[0]:.0f}x",
@@ -919,7 +1006,7 @@ gain = pd.DataFrame([{
     "f1_S_gain":     round(lc["f1_S"].iloc[-1] - lc["f1_S"].iloc[0], 4),
     "patients_gain": int(lc["train_patients"].iloc[-1] - lc["train_patients"].iloc[0]),
 }])
-save_table(gain, "24_learning_curve_gain")
+save_table(gain, "25_learning_curve_gain")
 
 
 # ============================================================================
@@ -937,7 +1024,7 @@ for d in DEPTHS:
                "f1_S": te_r["f1_S"], "accuracy": te_r["accuracy"]})
     print(f"  depth {str(d):<5} train {tr_r['f1_macro']:.4f}  test {te_r['f1_macro']:.4f}")
 vc = pd.DataFrame(vc)
-save_table(vc, "25_depth_curve")
+save_table(vc, "26_depth_curve")
 
 TREES = [10, 50, 100, 200, 400]
 tc = []
@@ -947,7 +1034,7 @@ for n in TREES:
     tc.append({"n_estimators": n, "train_f1": tr_r["f1_macro"], "test_f1": te_r["f1_macro"],
                "gap": round(tr_r["f1_macro"] - te_r["f1_macro"], 4)})
 tc = pd.DataFrame(tc)
-save_table(tc, "26_tree_count_curve")
+save_table(tc, "27_tree_count_curve")
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4.2))
 xs = range(len(vc))
@@ -955,7 +1042,8 @@ ax[0].plot(xs, vc["train_f1"], "o-", color="#C87A2A", label="train")
 ax[0].plot(xs, vc["test_f1"], "o-", color="#990011", label="test (DS2)")
 ax[0].fill_between(xs, vc["test_f1"], vc["train_f1"], color="#C87A2A", alpha=0.12)
 for i, g in enumerate(vc["gap"]):
-    ax[0].text(i, vc["train_f1"].iloc[i]+0.02, f"{g:.2f}", ha="center", fontsize=8, color="#888780")
+    ax[0].text(i, max(vc["test_f1"].iloc[i] - 0.08, 0.02), f"gap {g:.2f}",
+               ha="center", fontsize=8, color="#888780")
 ax[0].set_xticks(list(xs)); ax[0].set_xticklabels(vc["max_depth"])
 ax[0].set_xlabel("max_depth"); ax[0].set_ylabel("macro F1")
 ax[0].set_title("depth drives the overfitting gap"); ax[0].legend(fontsize=9); ax[0].set_ylim(0, 1.05)
@@ -965,7 +1053,7 @@ ax[1].plot(tc["n_estimators"], tc["test_f1"], "o-", color="#990011", label="test
 ax[1].set_xlabel("n_estimators"); ax[1].set_ylabel("macro F1")
 ax[1].set_title("tree count does not"); ax[1].legend(fontsize=9); ax[1].set_ylim(0, 1.05)
 plt.tight_layout()
-save_fig(fig, "15_validation_curves")
+save_fig(fig, "18_validation_curves")
 
 
 # ============================================================================
@@ -987,7 +1075,7 @@ sd = {"fold": "std"}
 for c in cv.columns[1:]:
     sd[c] = round(cv[c].std(), 4)
 cv = pd.concat([cv, pd.DataFrame([summ, sd])], ignore_index=True)
-save_table(cv, "27_cross_validation")
+save_table(cv, "28_cross_validation")
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4))
 folds = cv[cv.fold.apply(lambda x: isinstance(x, int))]
@@ -998,15 +1086,17 @@ ax[0].fill_between([0.4, 5.6], m-s, m+s, color="#990011", alpha=0.12, label=f"+/
 for i, v in zip(folds["fold"], folds["f1_macro"]):
     ax[0].text(i, v+0.01, f"{v:.3f}", ha="center", fontsize=9)
 ax[0].set_xlabel("fold"); ax[0].set_ylabel("macro F1"); ax[0].set_xlim(0.4, 5.6)
+ax[0].set_ylim(0, max(folds["f1_macro"].max(), m + s)*1.18)
 ax[0].set_title("5-fold grouped by patient"); ax[0].legend(fontsize=9)
 
 for i, c in enumerate(CLASSES):
     ax[1].bar(folds["fold"] + (i-1.5)*0.2, folds["f1_" + c], width=0.2,
               color=CLASS_COL[c], label=c)
 ax[1].set_xlabel("fold"); ax[1].set_ylabel("F1")
-ax[1].set_title("per-class F1 varies wildly between folds"); ax[1].legend(fontsize=9)
+ax[1].set_title("per-class F1 by fold"); ax[1].set_ylim(0, 1.15)
+ax[1].legend(fontsize=9, ncol=4, loc="upper center")
 plt.tight_layout()
-save_fig(fig, "16_cross_validation")
+save_fig(fig, "19_cross_validation")
 
 
 # ============================================================================
@@ -1030,14 +1120,14 @@ for rec, grp in dfe.groupby("record"):
         row["recall_" + c] = round((sub.pred == c).mean(), 4) if len(sub) else np.nan
     rec_rows.append(row)
 rec = pd.DataFrame(rec_rows).sort_values("accuracy")
-save_table(rec, "28_per_record", show=False)
+save_table(rec, "29_per_record", show=False)
 print(rec.head(10).to_string(index=False))
 
 s_holders = (dfe[dfe.true == "S"].groupby("record").size()
                .sort_values(ascending=False).reset_index(name="S_beats"))
 s_holders["share_of_DS2_S_pct"] = (100*s_holders["S_beats"]/s_holders["S_beats"].sum()).round(1)
 s_holders = s_holders.merge(rec[["record","recall_S"]], on="record")
-save_table(s_holders, "29_who_holds_class_S")
+save_table(s_holders, "30_who_holds_class_S")
 
 worst = s_holders.iloc[0]["record"]
 keep_te = te_i[g_all[te_i] != worst]
@@ -1054,7 +1144,7 @@ excl = pd.DataFrame([
      "f1_S": round(r_without["f1_S"]-r_with["f1_S"], 4),
      "f1_V": round(r_without["f1_V"]-r_with["f1_V"], 4)},
 ])
-save_table(excl, "30_single_patient_effect")
+save_table(excl, "31_single_patient_effect")
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 4.4))
 sh = s_holders.head(8).iloc[::-1]
@@ -1066,16 +1156,18 @@ ax[0].set_xlabel("share of all class-S beats in DS2 (%)")
 ax[0].set_title("class S lives in a handful of patients")
 ax[0].set_xlim(0, 100)
 
-rec_ok = rec.dropna(subset=["recall_S"])
+rec_ok = rec.dropna(subset=["recall_S"]).sort_values("n_S", ascending=False)
 ax[1].scatter(rec_ok["n_S"], rec_ok["recall_S"], s=40, color=CLASS_COL["S"], zorder=3)
-for r in rec_ok.itertuples():
-    ax[1].annotate(r.record, (r.n_S, r.recall_S), fontsize=7,
-                   textcoords="offset points", xytext=(4, 3))
+mark = pd.concat([rec_ok.head(1), rec_ok.nsmallest(2, "recall_S")]).drop_duplicates("record")
+for i, r in enumerate(mark.itertuples()):
+    ax[1].annotate("record " + str(r.record), (r.n_S, r.recall_S), fontsize=9, ha="center",
+                   fontweight="bold", textcoords="offset points",
+                   xytext=(0, 12 if i % 2 == 0 else -18))
 ax[1].set_xscale("symlog"); ax[1].set_xlabel("class-S beats in the record")
-ax[1].set_ylabel("recall on class S"); ax[1].set_ylim(-0.05, 1.05)
+ax[1].set_ylabel("recall on class S"); ax[1].set_ylim(-0.15, 1.18)
 ax[1].set_title("the patients with the most S beats are the ones it misses")
 plt.tight_layout()
-save_fig(fig, "17_per_record_analysis")
+save_fig(fig, "20_per_record_analysis")
 
 
 # ============================================================================
@@ -1098,7 +1190,7 @@ hsel = hsel.merge(vc[["max_depth","test_f1"]].rename(columns={"test_f1":"DS2_f1"
                   on="max_depth", how="left")
 chosen  = hsel.loc[hsel["DS1_inner_cv_f1"].idxmax()]
 peeking = hsel.loc[hsel["DS2_f1"].idxmax()]
-save_table(hsel, "31_honest_selection")
+save_table(hsel, "32_honest_selection")
 
 bias = pd.DataFrame([
     {"procedure": "Chosen on DS1 inner CV, reported on DS2",
@@ -1108,7 +1200,7 @@ bias = pd.DataFrame([
     {"procedure": "Optimism from letting the test set choose",
      "max_depth": "", "reported_f1": round(peeking["DS2_f1"] - chosen["DS2_f1"], 4)},
 ])
-save_table(bias, "32_selection_bias")
+save_table(bias, "33_selection_bias")
 
 fig, ax = plt.subplots(figsize=(8, 4))
 xs = range(len(hsel))
@@ -1119,9 +1211,9 @@ ax.axvline(list(hsel["max_depth"]).index(chosen["max_depth"]), color="#2F3C7E",
 ax.set_xticks(list(xs)); ax.set_xticklabels(hsel["max_depth"])
 ax.set_xlabel("max_depth"); ax.set_ylabel("macro F1")
 ax.set_title("selecting on DS1 and selecting on DS2 do not agree")
-ax.legend(fontsize=9); ax.set_ylim(0, 1.0)
+ax.legend(fontsize=9, loc="lower right"); ax.set_ylim(0, 1.08)
 plt.tight_layout()
-save_fig(fig, "18_honest_selection")
+save_fig(fig, "21_honest_selection")
 
 
 # ============================================================================
@@ -1145,7 +1237,7 @@ three = pd.DataFrame({"class": CL3, "meaning": [CLASS_NAME[c] for c in CL3],
                       "f1": f1v.round(3), "support": sup})
 three.loc[len(three)] = ["MACRO", "", round(pr.mean(), 3), round(rc.mean(), 3),
                          round(f1v.mean(), 3), sup.sum()]
-save_table(three, "33_three_class")
+save_table(three, "34_three_class")
 
 four_macro = metrics[(metrics.split=="inter-patient") & (metrics.model==best_name)]["f1_macro"].iloc[0]
 cmp3 = pd.DataFrame([
@@ -1153,7 +1245,7 @@ cmp3 = pd.DataFrame([
     {"task": "3 classes (N/S/V)",   "classes": 3, "macro_f1": round(f1v.mean(), 4)},
     {"task": "difference", "classes": -1, "macro_f1": round(f1v.mean() - four_macro, 4)},
 ])
-save_table(cmp3, "34_three_vs_four")
+save_table(cmp3, "35_three_vs_four")
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4))
 cm3  = confusion_matrix(y_all[te3], p3, labels=CL3)
@@ -1175,7 +1267,7 @@ for i, v in enumerate([four_macro, f1v.mean()]):
 ax[1].set_ylabel("macro F1"); ax[1].set_title("dropping class F")
 ax[1].set_ylim(0, max(four_macro, f1v.mean())*1.3)
 plt.tight_layout()
-save_fig(fig, "19_three_class")
+save_fig(fig, "22_three_class")
 
 
 # ============================================================================
@@ -1206,7 +1298,7 @@ base = pd.DataFrame([
     {"baseline": "Real model",              "f1_macro": real["f1_macro"], "accuracy": real["accuracy"]},
 ])
 base["beats_always_N_by"] = (base["f1_macro"] - sc(maj)[0]).round(4)
-save_table(base, "35_pipeline_validation")
+save_table(base, "36_pipeline_validation")
 
 fig, ax = plt.subplots(figsize=(9, 3.8))
 b = base.iloc[::-1]
@@ -1217,7 +1309,7 @@ for i, v in enumerate(b["f1_macro"]):
 ax.set_xlabel("macro F1"); ax.set_title("the model against every trivial baseline")
 ax.set_xlim(0, b["f1_macro"].max()*1.25)
 plt.tight_layout()
-save_fig(fig, "20_pipeline_validation")
+save_fig(fig, "23_pipeline_validation")
 
 
 # ============================================================================
@@ -1252,36 +1344,36 @@ findings = pd.DataFrame([
      "table": "14_per_class_metrics", "figure": "08_per_class_f1"},
     {"n": 5, "finding": "Class imbalance is not the bottleneck",
      "evidence": f"five balancing strategies move F1(S) by only {imb['f1_S'].max()-imb['f1_S'].min():.4f}",
-     "table": "21_imbalance_experiment", "figure": "13_imbalance_experiment"},
+     "table": "22_imbalance_experiment", "figure": "16_imbalance_experiment"},
     {"n": 6, "finding": "Only the timing features detect class S",
      "evidence": f"RR alone F1(S) {rr_f1S:.4f}, best of the other three families {oth_f1S:.4f}",
-     "table": "18_family_ablation", "figure": "11_family_ablation"},
+     "table": "19_family_ablation", "figure": "14_family_ablation"},
     {"n": 7, "finding": "Adding every feature is worse than choosing a subset",
      "evidence": f"{best_cb['combination']} macro F1 {best_cb['f1_macro']:.4f} vs ALL {all_cb['f1_macro']:.4f}",
-     "table": "19_feature_combinations", "figure": "12_feature_combinations"},
+     "table": "20_feature_combinations", "figure": "15_feature_combinations"},
     {"n": 8, "finding": "More beats do not help; more patients would",
      "evidence": f"{gain['data_increase'].iloc[0]} more training beats buys {gain['macro_f1_gain'].iloc[0]:+.4f} macro F1",
-     "table": "23_learning_curve", "figure": "14_learning_curve"},
+     "table": "24_learning_curve", "figure": "17_learning_curve"},
     {"n": 9, "finding": "Depth causes the overfitting, not tree count",
      "evidence": f"gap {shallow['gap']:.3f} at depth 4 vs {deep['gap']:.3f} unlimited; {tc['gap'].min():.3f} to {tc['gap'].max():.3f} across 10-400 trees",
-     "table": "25_depth_curve", "figure": "15_validation_curves"},
+     "table": "26_depth_curve", "figure": "18_validation_curves"},
     {"n": 10, "finding": "The result is one patient away from looking different",
      "evidence": f"excluding record {worst} changes F1(S) by {excl.iloc[2]['f1_S']:+.4f}",
-     "table": "30_single_patient_effect", "figure": "17_per_record_analysis"},
+     "table": "31_single_patient_effect", "figure": "20_per_record_analysis"},
     {"n": 11, "finding": "Choosing hyperparameters on the test set adds optimism",
      "evidence": f"{bias.iloc[2]['reported_f1']:+.4f} macro F1 from letting DS2 pick the depth",
-     "table": "32_selection_bias", "figure": "18_honest_selection"},
+     "table": "33_selection_bias", "figure": "21_honest_selection"},
     {"n": 12, "finding": "Fold-to-fold variation is larger than any tuning gain",
      "evidence": f"grouped 5-fold macro F1 {cv_mean:.4f} +/- {cv_sd:.4f}",
-     "table": "27_cross_validation", "figure": "16_cross_validation"},
+     "table": "28_cross_validation", "figure": "19_cross_validation"},
     {"n": 13, "finding": "The pipeline has no leakage of its own",
      "evidence": f"shuffled labels score {base[base.baseline.str.contains('shuffled')]['f1_macro'].iloc[0]:.4f} against the always-N baseline {base[base.baseline=='Always predict N']['f1_macro'].iloc[0]:.4f}",
-     "table": "35_pipeline_validation", "figure": "20_pipeline_validation"},
+     "table": "36_pipeline_validation", "figure": "23_pipeline_validation"},
     {"n": 14, "finding": "Dropping class F does not rescue the task",
      "evidence": f"3-class macro F1 {cmp3[cmp3.task=='3 classes (N/S/V)']['macro_f1'].iloc[0]:.4f} vs 4-class {four_macro:.4f}",
-     "table": "34_three_vs_four", "figure": "19_three_class"},
+     "table": "35_three_vs_four", "figure": "22_three_class"},
 ])
-save_table(findings, "36_summary_of_findings", show=False)
+save_table(findings, "37_summary_of_findings", show=False)
 print(findings[["n","finding","evidence"]].to_string(index=False))
 
 protocol_spread = abs(mr["f1_macro"] - mi["f1_macro"])
@@ -1297,17 +1389,20 @@ lever = pd.DataFrame([
     {"lever": "Class balancing (5 strategies)",                "macro_f1_swing": round(imb["f1_macro"].max()-imb["f1_macro"].min(), 4)},
     {"lever": "Tree count (10 to 400)",                        "macro_f1_swing": round(tc["test_f1"].max()-tc["test_f1"].min(), 4)},
 ]).sort_values("macro_f1_swing", ascending=False).reset_index(drop=True)
-save_table(lever, "37_what_moves_the_result")
+save_table(lever, "38_what_moves_the_result")
 
-fig, ax = plt.subplots(figsize=(9, 4))
+PROTO = "Evaluation protocol (random vs inter-patient)"
+fig, ax = plt.subplots(figsize=(10, 4))
 lv = lever.iloc[::-1]
-cols = ["#990011" if i == len(lv)-1 else "#2F3C7E" for i in range(len(lv))]
+cols = ["#990011" if l == PROTO else "#2F3C7E" for l in lv["lever"]]
 ax.barh(lv["lever"], lv["macro_f1_swing"], color=cols)
 for i, v in enumerate(lv["macro_f1_swing"]):
-    ax.text(v+0.005, i, f"{v:.3f}", va="center", fontsize=9)
+    ax.text(v + lv["macro_f1_swing"].max()*0.02, i, f"{v:.3f}", va="center", fontsize=9)
 ax.set_xlabel("macro F1 swing")
-ax.set_title("how the evaluation protocol is set matters more than every tuning decision combined")
-ax.set_xlim(0, lv["macro_f1_swing"].max()*1.25)
+ax.set_title("the evaluation protocol outweighs every tuning decision combined"
+             if lever.iloc[0]["lever"] == PROTO
+             else "largest single lever: " + lever.iloc[0]["lever"], fontsize=11)
+ax.set_xlim(0, lv["macro_f1_swing"].max()*1.3)
 ax.tick_params(axis="y", labelsize=9)
 plt.tight_layout()
-save_fig(fig, "21_what_moves_the_result")
+save_fig(fig, "24_what_moves_the_result")

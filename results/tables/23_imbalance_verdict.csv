@@ -1,0 +1,6 @@
+finding,value
+Spread in F1(S) across all five strategies,0.1071
+Spread in macro F1 across all five strategies,0.0296
+Best F1(S) achieved by any balancing,0.1773 (SMOTE)
+F1(S) from feature choice instead (section 13),0.1982 (rr+wavelet)
+Conclusion,imbalance matters
